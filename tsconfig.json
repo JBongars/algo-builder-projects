@@ -1,22 +1,43 @@
 {
   "compilerOptions": {
     "target": "ES2020",
-    "lib": ["esnext", "dom"],
-    "types": ["chai", "node", "mocha"],
+    "lib": [
+      "esnext",
+      "dom"
+    ],
+    "types": [
+      "chai",
+      "node",
+      "mocha"
+    ],
     "outDir": "./build/scripts",
-    "typeRoots": ["node_modules/@types"],
+    "typeRoots": [
+      "node_modules/@types"
+    ],
     "experimentalDecorators": true,
     "esModuleInterop": true,
     "allowJs": true,
-    "module": "commonjs",
+    "module": "esnext",
     "resolveJsonModule": true,
     "noImplicitReturns": true,
     "noImplicitThis": true,
     "strict": true,
     "forceConsistentCasingInFileNames": true,
     "sourceMap": true,
-    "declaration": true
+    "declaration": true,
+    "skipLibCheck": true,
+    "allowSyntheticDefaultImports": true,
+    "noFallthroughCasesInSwitch": true,
+    "moduleResolution": "node",
+    "isolatedModules": true,
+    "noEmit": true,
+    "jsx": "react-jsx"
   },
-  "exclude": ["**/node_modules", "**/webpack"],
-  "include": ["scripts"]
+  "exclude": [
+    "**/node_modules",
+    "**/webpack"
+  ],
+  "include": [
+    "scripts"
+  ]
 }
