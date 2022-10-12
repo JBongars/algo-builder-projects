@@ -1,5 +1,6 @@
 from pyteal import *
 
+
 def htlc(tmpl_bob, tmpl_alice, tmpl_secret, tmpl_timeout):
 
     common_fields = And(
