@@ -1,1 +1,1 @@
-declare module "chai";
+// Leave file blank

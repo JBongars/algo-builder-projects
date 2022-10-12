@@ -1,7 +1,7 @@
 import { LogicSigAccount } from "algosdk";
+import algosdk from "algosdk";
 
-const YAMLData = require("../../artifacts/cache/htlc.py.yaml");
-const algosdk = require("algosdk");
+import YAMLData from "~/artifacts/cache/htlc.yaml";
 
 const token =
   "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa";
@@ -38,7 +38,7 @@ const waitForConfirmation = async function (txId) {
   }
 };
 
-export async function getEscrowDetails() {
+async function getEscrowDetails() {
   const escrowInfo = await algodClient.accountInformation(escrowAddress).do();
   return {
     address: escrowAddress,
@@ -46,36 +46,34 @@ export async function getEscrowDetails() {
   };
 }
 
-export async function WithdrawHtlc(receiver, secret, amount) {
-  try {
-    const secretBytes = new Uint8Array(Buffer.from(secret));
+async function WithdrawHtlc(receiver, secret, amount) {
+  const secretBytes = new Uint8Array(Buffer.from(secret));
 
-    const lsig = new LogicSigAccount(YAMLData.base64ToBytes, [secretBytes]);
-    if (lsig.tag) {
-      lsig.tag = Uint8Array.from(lsig.tag);
-    }
-
-    let params = await algodClient.getTransactionParams().do();
-    params.fee = 1000;
-    params.flatFee = true;
-    let closeToRemaninder = undefined;
-    let note = undefined;
-    let txn = algosdk.makePaymentTxnWithSuggestedParams(
-      escrowAddress,
-      receiver,
-      amount,
-      closeToRemaninder,
-      note,
-      params
-    );
-
-    let signedTx = await algosdk.signLogicSigTransactionObject(txn, lsig);
-    let sentTx = await algodClient.sendRawTransaction(signedTx.blob).do();
-    let resp = await waitForConfirmation(sentTx.txId);
-
-    return "Escrow withdrawal successful. " + resp;
-  } catch (error) {
-    console.error(error);
-    return "Escrow Withdrawal Unsuccessful. Error: " + error.message;
+  const lsig = new LogicSigAccount(YAMLData.base64ToBytes, [secretBytes]);
+  if (lsig.tag) {
+    lsig.tag = Uint8Array.from(lsig.tag);
   }
+
+  const params = await algodClient.getTransactionParams().do();
+  params.fee = 1000;
+  params.flatFee = true;
+
+  const closeToRemainder = undefined;
+  const note = undefined;
+  const txn = algosdk.makePaymentTxnWithSuggestedParams(
+    escrowAddress,
+    receiver,
+    amount,
+    closeToRemainder,
+    note,
+    params
+  );
+
+  let signedTx = await algosdk.signLogicSigTransactionObject(txn, lsig);
+  let sentTx = await algodClient.sendRawTransaction(signedTx.blob).do();
+  let resp = await waitForConfirmation(sentTx.txId);
+
+  return "Escrow withdrawal successful. " + resp;
 }
+
+export { getEscrowDetails, WithdrawHtlc };
